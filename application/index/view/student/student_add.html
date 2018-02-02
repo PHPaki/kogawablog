@@ -1,0 +1,139 @@
+{extend name="public/base" /}
+
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+{block name="header"}{/block}
+
+{block name="menu"}{/block}
+{block name="content"}
+<article class="cl pd-20">
+	<form action="" class="form form-horizontal" id="form-admin-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="课程名" id="name" name="name">
+				<span class="inputtip" status="0"></span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>年龄：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="价格" id="age" name="age">
+				<span class="inputtip" status="0"></span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">性别：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="sex" size="1">
+					<option value="1">男</option>
+					<option value="0">女</option>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">参加课程：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="lesson" size="1">
+					<option value="0">未定义</option>
+					{foreach $list as $vo}
+					<option value="{$vo.id}">{$vo.name}</option>
+					{/foreach}
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">是否入学：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="status" size="1">
+					<option value="4">已入学</option>
+					<option value="3" selected>未入学</option>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input id="submit" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+{/block}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本-->
+<script>
+	//验证各个输入框字段是否合法
+	$('form input').each(function(i, obj) {
+		$(obj).blur(function() {
+			var tag = $(obj).attr('id');
+			var url = "{:url('student/check','','')}" + tag + '.html';
+			var data = {};
+			data[tag] = $(obj).val();
+			$.ajax({
+				type:"GET",
+				url:url ,
+				data:data,
+				success(res) {
+					if (res.status == 0) {
+						//如果不合法,提示
+						$(obj).next().html(res.message);
+						$(obj).next().css('color', 'red');
+						$(obj).css('border', '1px solid red');
+					} else {
+						$(obj).next().html('OK');
+						$(obj).next().css('color', 'green');
+						$(obj).css('border', '1px solid rgb(221, 221, 221)');
+						$(obj).next().attr('status', 1);
+						//允许尝试提交
+						$('#submit').removeClass('disabled');
+					}
+				}
+			});
+		});
+	});
+
+	//消除提交框的事件绑定
+	$('form input:last').unbind();
+
+	//提交后台创建新数据
+	$('form').submit(function() {
+		var judge = 0;
+
+		//获取上面的输入情况
+		for (var i = 0;i < $('.inputtip').length; i++) {
+			if ($('.inputtip')[i].getAttribute('status') == '1') {
+				judge++;
+			}
+		}
+
+		//如果2个判断条件都满足,提交保存,否则禁止提交
+		if (judge == 2) {
+			$.ajax({
+				type:'POST',
+				url:"{:url('student/addStudent')}",
+				data:$(this).serialize(),
+				success(res) {
+					if (res == 1) {
+						//成功刷新原窗口并关闭弹窗
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.location.reload();
+						parent.layer.close(index);
+					} else {
+						alert('新建失败');
+					}
+				}
+			});
+		} else {
+			$('#submit').addClass('disabled');
+		}
+		return false;
+	});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}

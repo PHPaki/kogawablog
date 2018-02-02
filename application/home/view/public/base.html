@@ -1,0 +1,28 @@
+{block name="meta"}{include file="public/meta" /}{/block}
+</head>
+<body id="blog">
+{block name="header"}{include file="public/header" /}{/block}
+<hr>
+{block name="nav"}{include file="public/nav" /}{/block}
+{block name="banner"}{include file="public/banner" /}{/block}
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed">
+    <div class="am-u-md-8 am-u-sm-12">
+    {block name="content"}文章列表或者是文章{/block}
+    </div>
+    {block name="right-side-bar"}{include file="public/right-side-bar" /}{/block}
+</div>
+<!-- content end -->
+{block name="footer"}{include file="public/footer" /}{/block}
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="__STATIC__/home/assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="__STATIC__/home/assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="__STATIC__/home/assets/js/amazeui.min.js"></script>
+{block name="js"}{/block}
+</body>
+</html>

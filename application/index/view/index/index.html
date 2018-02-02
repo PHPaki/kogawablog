@@ -1,0 +1,83 @@
+﻿{extend name="public/base" /}
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+
+{block name="content"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/" class="maincolor">首页</a> 
+		<span class="c-999 en">&gt;</span>
+		<span class="c-666">系统信息</span> 
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<p class="f-20 text-success">欢迎使用教学管理系统
+				<span class="f-14">v1.0</span>
+				</p>
+			<p>登录次数：{$Think.session.user_info.login_count} </p>
+			<p>上次登录IP：{$Think.server.remote_addr}  上次登录时间：{$Think.session.user_info.login_time|date="Y-m-d H:i:s", ###}</p>
+
+			<table class="table table-border table-bordered table-bg mt-20">
+				<thead>
+					<tr>
+						<th colspan="2" scope="col">服务器信息</th>
+			</tr>
+		</thead>
+				<tbody>
+					<tr>
+						<th width="30%">服务器计算机名</th>
+						<td><span id="lbServerName">{$Think.server.server_name}</span></td>
+			</tr>
+					<tr>
+						<td>服务器IP地址</td>
+						<td>{$Think.server.server_addr}</td>
+			</tr>
+					<tr>
+						<td>服务器域名</td>
+						<td>{$Request.domain}</td>
+			</tr>
+					<tr>
+						<td>当前PHP版本 </td>
+						<td>{$Think.server.server_software|strstr='PHP'}</td>
+			</tr>
+					<tr>
+						<td>服务器Apache信息 </td>
+						<td>{$Think.server.server_software|strrev|strstr=' '|strrev}</td>
+			</tr>
+					<tr>
+						<td>本文件所在文件夹 </td>
+						<td>{$Think.server.document_root}</td>
+			</tr>
+					<tr>
+						<td>当前请求url </td>
+						<td>{$Request.url.true}</td>
+			</tr>
+					<tr>
+						<td>当前session的数量 </td>
+						<td>{:count($Request.session)}</td>
+			</tr>
+					<tr>
+						<td>当前SessionID </td>
+						<td>{:session_id()}</td>
+			</tr>
+		</tbody>
+	</table>
+</article>
+		<footer class="footer">
+			<p>基础教育管理系统<br> 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持</p>
+</footer>
+</div>
+</section>
+{/block}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}

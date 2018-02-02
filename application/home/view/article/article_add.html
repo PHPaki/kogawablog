@@ -1,0 +1,143 @@
+{extend name="public/base" /}
+{block name="meta"}
+{load href="__STATIC__/static/h-ui/css/H-ui.min.css" /}
+{load href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css" /}
+{load href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" /}
+{load href="__STATIC__/static/h-ui.admin/skin/default/skin.css" id="skin" /}
+{load href="__STATIC__/static/h-ui.admin/css/style.css" /}
+{__block__}
+{/block}
+{block name="banner"}{/block}
+{block name="content"}
+<article class="page-container" style="padding:0;">
+    <form class="form form-horizontal" id="form-article-add" action="/index/index/upload" enctype="multipart/form-data" method="post">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">简略标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                <select name="" class="select">
+                    <option value="0">全部栏目</option>
+                    <option value="1">新闻资讯</option>
+                    <option value="11">├行业动态</option>
+                    <option value="12">├行业资讯</option>
+                    <option value="13">├行业新闻</option>
+                </select>
+                </span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章类型：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                <select name="" class="select">
+                    <option value="0">全部类型</option>
+                    <option value="1">帮助说明</option>
+                    <option value="2">新闻资讯</option>
+                </select>
+                </span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">排序值：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">关键词：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,200)"></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章作者：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章来源：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">允许评论：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" id="checkbox-pinglun">
+                    <label for="checkbox-pinglun">&nbsp;</label>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">缩略图：</label>
+            <!-- 带文本框 -->
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <span class="btn-upload form-group">
+                      <input class="input-text upload-url radius uploader-list" type="text" name="uploadfile-1" id="uploadfile-1" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
+                      <input type="file" multiple name="file-1" class="input-file">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
+            <div class="formControls col-xs-8 col-sm-9"> 
+                <script id="editor" type="text/plain" style="width:100%;height:400px;"></script> 
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+                <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+                <button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</article>
+{/block}
+
+{block name="js"}
+{load href="__STATIC__/lib/layer/2.4/layer.js" /}
+{load href="__STATIC__/static/h-ui/js/H-ui.js" /}
+{load href="__STATIC__/static/h-ui.admin/js/H-ui.admin.page.js" /}
+
+{load href="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js" /}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js" /}
+{load href="__STATIC__/lib/webuploader/0.1.5/webuploader.min.js" /}
+{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.config.js" /}
+{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js" /}
+{load href="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js" /}
+<script>
+$(function(){
+    // radio,checkbox 美化
+    $('.skin-minimal input').iCheck({
+        checkboxClass: 'icheckbox-blue',
+        radioClass: 'iradio-blue',
+        increaseArea: '20%'
+    });
+
+    // 引入编辑器
+    var ue = UE.getEditor('editor');
+});
+</script>
+{/block}

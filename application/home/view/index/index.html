@@ -1,0 +1,23 @@
+{extend name="public/base" /}
+{block name="content"}
+<h2 class="blog-text-left blog-title"><span>所有文章</span></h2><hr>
+        {foreach $list as $vo}
+        <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                <img src="{$vo.thumb_path}" alt="" class="am-u-sm-12">
+            </div>
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                <span><a href="" class="blog-color">article &nbsp;</a></span>
+                <span> {$vo.user.name} &nbsp;</span>
+                <span>{$vo.create_time}</span>
+                <h1><a href="">{$vo.title}</a></h1>
+                <p>{$vo.content}</p>
+                <p><a href="" class="blog-continue">continue reading</a></p>
+            </div>
+        </article>
+        {/foreach}
+        <!-- 页码区域 -->
+        {$list->render()}
+
+{/block}
+{block name="js"}{block}
