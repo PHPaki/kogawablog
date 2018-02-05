@@ -6,77 +6,63 @@
 {load href="__STATIC__/static/h-ui.admin/skin/default/skin.css" id="skin" /}
 {load href="__STATIC__/static/h-ui.admin/css/style.css" /}
 {__block__}
-{/block}
-{block name="banner"}{/block}
+{/block}{block name="banner"}{/block}
+
 {block name="content"}
 <article class="page-container" style="padding:0;">
-    <form class="form form-horizontal" id="form-article-add" action="/index/index/upload" enctype="multipart/form-data" method="post">
+    <form class="form form-horizontal" id="form-article-add" action="{:url('home/article/articleaddexecu')}" enctype="multipart/form-data" method="post">
+        <!-- 标题 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="长度在2-10之间" id="" name="title">
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">简略标题：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
-            </div>
-        </div>
+
+        <!-- 栏目 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                <select name="" class="select">
-                    <option value="0">全部栏目</option>
-                    <option value="1">新闻资讯</option>
-                    <option value="11">├行业动态</option>
-                    <option value="12">├行业资讯</option>
-                    <option value="13">├行业新闻</option>
+                <select name="cat_id" class="select">
+                    {foreach $catShow as $vo}
+                    <option value="{$vo.id}">{$vo.tabName}</option>
+                    {/foreach}
                 </select>
                 </span> </div>
         </div>
+
+        <!-- 标签 -->
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章类型：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-                <select name="" class="select">
-                    <option value="0">全部类型</option>
-                    <option value="1">帮助说明</option>
-                    <option value="2">新闻资讯</option>
-                </select>
-                </span> </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">排序值：</label>
+            <label class="form-label col-xs-4 col-sm-2">标签：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
+                <input type="text" class="input-text" value="" placeholder="可不填,填写时不同标签请用,隔开" id="" name="tags">
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">关键词：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="" name="">
-            </div>
-        </div>
+
+        <!-- 文章引言 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,200)"></textarea>
+                <textarea name="subtitle" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入5个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,200)"></textarea>
                 <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
             </div>
         </div>
+
+        <!-- 图片上传 -->
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">文章作者：</label>
+            <label class="form-label col-xs-4 col-sm-2">插图：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
+                <div class="uploader-thum-container">
+                    <span class="btn-upload form-group">
+                      <input class="input-text upload-url radius uploader-list" type="text" name="img" id="uploadfile-1" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
+                      <input type="file" multiple name="img" class="input-file">
+                    </span>
+                </div>
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">文章来源：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="0" placeholder="" id="" name="">
-            </div>
-        </div>
-        <div class="row cl">
+        
+        <!-- 是否允许评论 -->
+        <!-- <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">允许评论：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="check-box">
@@ -84,32 +70,23 @@
                     <label for="checkbox-pinglun">&nbsp;</label>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <!-- 内容输入框 -->
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">缩略图：</label>
-            <!-- 带文本框 -->
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="uploader-thum-container">
-                    <span class="btn-upload form-group">
-                      <input class="input-text upload-url radius uploader-list" type="text" name="uploadfile-1" id="uploadfile-1" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
-                      <input type="file" multiple name="file-1" class="input-file">
-                    </span>
-                </div>
+            <div class="formControls col-xs-12 col-sm-11"> 
+                <script type="text/plain" id="editor" name="content" style="width:100%;height:400px;">{$Request.cookie.content|default="内容"}</script> 
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">文章内容：</label>
-            <div class="formControls col-xs-8 col-sm-9"> 
-                <script id="editor" type="text/plain" style="width:100%;height:400px;"></script> 
-            </div>
-        </div>
+
+        <!-- 提交 -->
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                <button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
-                <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
-                <button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+                <button class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
         </div>
+
     </form>
 </article>
 {/block}
@@ -118,7 +95,6 @@
 {load href="__STATIC__/lib/layer/2.4/layer.js" /}
 {load href="__STATIC__/static/h-ui/js/H-ui.js" /}
 {load href="__STATIC__/static/h-ui.admin/js/H-ui.admin.page.js" /}
-
 {load href="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js" /}
 {load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
 {load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
@@ -127,7 +103,7 @@
 {load href="__STATIC__/lib/ueditor/1.4.3/ueditor.config.js" /}
 {load href="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js" /}
 {load href="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js" /}
-<script>
+<script type="text/javascript">
 $(function(){
     // radio,checkbox 美化
     $('.skin-minimal input').iCheck({
@@ -137,7 +113,58 @@ $(function(){
     });
 
     // 引入编辑器
-    var ue = UE.getEditor('editor');
+    var ue = UE.getEditor('editor', {
+        toolbars: [
+            ['fullscreen', 'source', 'undo', 'redo'],
+            ['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
+        ],
+    });
+
+    //表单验证
+    var validate = $("#form-article-add").validate({
+        rules:{
+            title:{
+                required:true,
+                minlength:2,
+                maxlength:16
+            },
+            subtitle:{
+                required:true,
+                minlength:5,
+                maxlength:66
+            },
+            tags:{
+                required:false,
+                minlength:4,
+                maxlength:16
+            }
+        },
+        message:{
+            title:{
+                required:'需要填写标题',
+                minlength:'最小长度是2',
+                maxlength:'最大长度是16'
+            },
+            subtitle:{
+                required:'需要填写文章概要',
+                minlength:'最小长度是5',
+                maxlength:'最大长度是66',
+            },
+            tags:{
+                required:'需要填写标签',
+                minlength:'最小长度是4',
+                maxlength:'最大长度是16'
+            }
+        },
+        onkeyup:false,
+        focusCleanup:true,
+        focusInvalid:false,
+        submitHandler:function(form) {
+            form.submit();
+        }
+    });
+        
 });
+
 </script>
 {/block}

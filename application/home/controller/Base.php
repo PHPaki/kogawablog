@@ -16,19 +16,12 @@ class Base extends Controller
         define('USER_ID', Session::get('user_id'));
     }
 
-        //文章列表
-    public function articleList()
-    {
-        $list = Article::paginate(5);
-        $this->assign('list', $list);
-        return $list;
-    }
 
     //栏目列表
     public function catList()
     {
         $cat = Category::all(function($query) {
-            $query->order('id desc')->limit(5);
+            $query->where('parent_id', 0)->order('id desc')->limit(5);
         });
         //查询下文章数量,作为属性输入对象
         for($i = 0; $i < count($cat); $i++) {
@@ -48,7 +41,7 @@ class Base extends Controller
         return $tag;
     }
     
-    //评论列表
+    //最新评论列表
     public function commentList()
     {
         $comment = Comment::all(function($query) {

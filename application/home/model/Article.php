@@ -13,6 +13,12 @@ class Article extends Model
     //时间戳(在database.php中设置了自动输出时间转换)
     protected $autoWriteTimestamp = true;
 
+    //关联article_content表
+    public function articleContent()
+    {
+        return $this->hasOne('ArticleContent', 'article_id', 'id');
+    }
+
     //关联user表
     public function user()
     {
@@ -29,6 +35,12 @@ class Article extends Model
     public function tag()
     {
         return $this->belongsToMany('Tag', 'tag_relation', 'tag_id', 'article_id');
+    }
+
+    //关联comment表
+    public function comment()
+    {
+        return $this->hasMany('Comment', 'article_id', 'id');
     }
 
 }
