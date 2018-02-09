@@ -1,21 +1,22 @@
 <?php
 namespace app\home\controller;
 
-use app\home\controller\Base;
-use app\homt\model\Comment;
+use app\base\controller\Base;
+use app\home\model\Article;
 
 class Comment extends Base
 {
     //评论添加后台验证,返回新增数量
-    public function commentAddExcue
+    public function commentAddExecu()
     {
         $data['content'] = $this->request->param('content');
         $check = $this->validate($data, 'Comment');
-        if ($result !== true) {
-            $this->error($result);
+        if ($check !== true) {
+            $this->error($check);
         }
-        $comment = new Comment($data);
-        $result = $comment->save();
-        return $result;
+        $data['user_id'] = $this->request->session('user_id');
+        $article = Article::get($this->request->param('article_id'));
+        $res = $article->comment()->save($data);
+        return $res;
     }
 }

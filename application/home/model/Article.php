@@ -2,14 +2,9 @@
 namespace app\home\model;
 
 use think\Model;
-use traits\model\SoftDelete;
 
 class Article extends Model
 {
-    //软删除
-    use SoftDelete;
-    protected $deleteTime = 'delete_time';
-
     //时间戳(在database.php中设置了自动输出时间转换)
     protected $autoWriteTimestamp = true;
 

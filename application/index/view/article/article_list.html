@@ -1,0 +1,165 @@
+﻿{extend name="public/base" /}
+
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+{block name="content"}
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		文章管理
+		<span class="c-gray en">&gt;</span>
+		文章列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+	
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l"> 
+					<a href="javascript:;" onclick="select_delete()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> 
+					<a href="javascript:;" onclick="article_add('添加文章','{:url("article/articleadd")}','1000','700')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a> 
+				</span>
+				<span class="r">共有数据：<strong>{$count|default='0'}</strong> 条</span>
+			</div>
+
+			<table class="table table-border table-bordered table-bg">
+				<thead>
+					<tr>
+						<th scope="col" colspan="9">文章列表</th>
+					</tr>
+					<tr class="text-c">
+						<th width="25"><input id="selectPage" onclick="selectPage()" type="checkbox" name="" value=""></th>
+						<th width="40">ID</th>
+						<th width="150">标题</th>
+						<th width="150">作者</th>
+						<th width="90">栏目</th>
+						<th width="90">标签</th>
+						<th width="100">发布时间</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{if condition="($count != 0)"}
+					{foreach $list as $vo}
+					<tr class="text-c">
+						<td><input type="checkbox" id="{$vo.id}" value="" name=""></td>
+						<td>{$vo.id}</td>
+						<td>{$vo.title}</td>
+						<td>{$vo.user.name}</td>
+						<td>{$vo.category.name}</td>
+						<td>{$vo.tags}</td>
+						<!-- 用于判断文章状态是未入学还是已入学 -->
+						<td>{$vo.create_time}</td>	
+						<td class="td-manage">
+							<a title="编辑" href="javascript:;" onclick="article_edit('文章编辑','{:url("article/articleEdit",["id"=>$vo.id])}', '1000', '700')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> 
+							<a title="删除" href="javascript:;" onclick="article_del(this, {$vo.id})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</td>	
+					</tr>
+					{/foreach}
+					<tr class="page">
+						<td scope="col" colspan="9" style="text-align: right;">{$list->render()}</th>
+					</tr>
+					{else /} <td colspan="8">没有文章</td>
+					{/if}
+				</tbody>
+			</table>
+		</article>
+	</div>
+	
+</section>
+{/block}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript">
+
+//页面全选
+function selectPage() {
+	if ($('#selectPage').prop('checked') == true){
+		$('input:checkbox').prop('checked', true);
+	} else {
+		$('input:checkbox').prop('checked', false);
+	}
+}
+//批量删除
+function select_delete() {
+	layer.confirm('确认要删除吗？',function(index) {
+		var data = {};
+		var i = 0;
+		//选中所有选中的框,排除头部的全选按钮
+		var box = $('input:checkbox:not([id=selectPage])');
+		box.each(function() {
+			if ($(this).prop('checked') == true) {
+				data['key' + i] = $(this).attr('id');
+				i++;
+			}
+		});
+		if (data['key0'] == null) {
+			return false;
+		} else {
+			$.ajax({
+				type:"GET",
+				url:"{:url('article/articleDelete')}",
+				data:data,
+				success(status) {
+					// 要避免整页全选删除后,跳入变量未定义页面
+					if (status > 0 && status != box.length) {
+						window.location.href = window.location.href; 
+						layer.msg('已删除!',{icon:1,time:1500});
+					} else if (status == box.length) {
+						window.location.href = "{:url('article/articlelist')}";
+						layer.msg('已删除!',{icon:1,time:1500});
+					} else {
+						layer.msg(status ,{icon:1,time:1500});
+					}
+				}
+			});
+		}
+	});
+}
+
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+/*文章-增加*/
+function article_add(title,url,w,h) {
+	layer_show(title,url,w,h);
+}
+
+/*文章-编辑*/
+function article_edit(title,url,w,h) {
+	layer_show(title,url,w,h);
+}
+
+/*文章-删除*/
+function article_del(obj,id) {
+	layer.confirm('确认要删除吗？',function(index) {
+		$.ajax({
+			type:'GET',
+			url:"{:url('article/articleDelete')}",
+			data:{id:id},
+			success(status) {
+				if (status == 1) {
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				} else {
+					layer.msg('未知原因,删除失败!',{icon:5,time:1000});
+				}
+			}
+		});
+		
+	});
+}
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}

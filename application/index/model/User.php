@@ -20,8 +20,8 @@ class User extends Model
         $role = [
             4=>'超级管理员', 
             3=>'管理员', 
-            2=>'教师', 
-            1=>'学生',
+            2=>'高级用户', 
+            1=>'普通用户',
         ];
         return $role[$value];
     }

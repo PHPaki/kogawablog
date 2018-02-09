@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\index\model\User as UserModel;
+use app\base\controller\Base;
 use think\Session;
 
 class User extends Base

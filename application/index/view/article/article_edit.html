@@ -1,21 +1,23 @@
 {extend name="public/base" /}
-{block name="meta"}
-{load href="__STATIC__/static/h-ui/css/H-ui.min.css" /}
-{load href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css" /}
-{load href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" /}
-{load href="__STATIC__/static/h-ui.admin/skin/default/skin.css" id="skin" /}
-{load href="__STATIC__/static/h-ui.admin/css/style.css" /}
-{__block__}
-{/block}{block name="banner"}{/block}
 
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+{block name="header"}{/block}
+
+{block name="menu"}{/block}
 {block name="content"}
 <article class="page-container" style="padding:0;">
-    <form class="form form-horizontal" id="form-article-add" action="{:url('index/article/articleaddexecu')}" enctype="multipart/form-data" method="post">
+    <form class="form form-horizontal" id="form-article-add" action="{:url('home/article/articleaddexecu')}" enctype="multipart/form-data" method="post">
         <!-- 标题 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="长度在2-10之间" id="" name="title">
+                <input type="text" class="input-text" value="{$res.title}" placeholder="长度在2-10之间" id="" name="title">
             </div>
         </div>
 
@@ -25,7 +27,11 @@
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
                 <select name="cat_id" class="select">
                     {foreach $catShow as $vo}
-                    <option value="{$vo.id}">{$vo.tabName}</option>
+                    {if condition="$vo.id eq $res.category.id"}
+                    	<option value="{$vo.id}" selected>{$vo.tabName}</option>
+                    {else /}
+                    	<option value="{$vo.id}">{$vo.tabName}</option>
+                	{/if}
                     {/foreach}
                 </select>
                 </span> </div>
@@ -35,15 +41,15 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">标签：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="可不填,填写时不同标签请用,隔开" id="" name="tags">
+                <input type="text" class="input-text" value="{$res.tags}" placeholder="可不填,填写时不同标签请用,隔开" id="" name="tags">
             </div>
         </div>
 
-        <!-- 文章摘要 -->
+        <!-- 文章引言 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="subtitle" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入5个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！"></textarea>
+                <textarea name="subtitle" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入5个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！">{$res.subtitle}</textarea>
                 <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
             </div>
         </div>
@@ -54,24 +60,34 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
                     <span class="btn-upload form-group">
-                      <input class="input-text upload-url radius uploader-list" type="text" name="img" id="uploadfile-1" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
+                      <input class="input-text upload-url radius uploader-list" type="text" name="img" id="uploadfile-1" value="" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
                       <input type="file" multiple name="img" class="input-file">
                     </span>
                 </div>
             </div>
         </div>
+        <!-- 旧图片显示 -->
+        <div class="row cl">
+        	<label class="form-label col-xs-4 col-sm-2"></label>
+        	<div class="formControls col-xs-8 col-sm-9">
+        		<img src="{$res.thumb_path}" style="width:125px;height:65px;"/>
+        	</div>
+    	</div>
 
+        
         <!-- 内容输入框 -->
         <div class="row cl">
-            <div class="formControls col-xs-12 col-sm-11"> 
-                <script type="text/plain" id="editor" name="content" style="width:100%;height:400px;">{$Request.cookie.content|default="内容"}</script> 
+            <label class="form-label col-xs-4 col-sm-2">内容：</label>
+            <div class="formControls col-xs-8 col-sm-9"> 
+                <script type="text/plain" id="editor" name="content" style="width:100%;height:400px;">{$res.articleContent.content}</script> 
             </div>
         </div>
 
-        <!-- 提交 -->
+        <input type="hidden" name="article_id" value="{$res.id}">
+
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 提交</button>
                 <button class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
         </div>
@@ -81,17 +97,7 @@
 {/block}
 
 {block name="js"}
-{load href="__STATIC__/lib/layer/2.4/layer.js" /}
-{load href="__STATIC__/static/h-ui/js/H-ui.js" /}
-{load href="__STATIC__/static/h-ui.admin/js/H-ui.admin.page.js" /}
-{load href="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js" /}
-{load href="__STATIC__/lib/webuploader/0.1.5/webuploader.min.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.config.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js" /}
+<!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
 $(function(){
     // radio,checkbox 美化
@@ -108,6 +114,7 @@ $(function(){
             ['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
         ],
     });
+
 
     //表单验证
     var validate = $("#form-article-add").validate({
@@ -149,11 +156,31 @@ $(function(){
         focusCleanup:true,
         focusInvalid:false,
         submitHandler:function(form) {
-            form.submit();
+            // form.submit();
+            var formData = new FormData(form);
+            $.ajax({
+                type:"POST",
+                url:"{:url('index/article/articleEditExecu')}",
+                data:formData,
+                processData:false,
+                contentType: false,
+                success: function(res) {
+                    if (res === true) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.msg('文章编辑成功!',{icon:1,time:1500});
+                        parent.layer.close(index);
+                    } else {
+                        layer.msg(res ,{icon:5,time:2000});
+                    }
+                    // console.log(res);
+                }
+            });
         }
     });
         
 });
 
 </script>
+<!--/请在上方写此页面业务相关的脚本-->
 {/block}

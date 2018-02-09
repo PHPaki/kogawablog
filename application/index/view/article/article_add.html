@@ -1,16 +1,18 @@
 {extend name="public/base" /}
-{block name="meta"}
-{load href="__STATIC__/static/h-ui/css/H-ui.min.css" /}
-{load href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css" /}
-{load href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" /}
-{load href="__STATIC__/static/h-ui.admin/skin/default/skin.css" id="skin" /}
-{load href="__STATIC__/static/h-ui.admin/css/style.css" /}
-{__block__}
-{/block}{block name="banner"}{/block}
 
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+{block name="header"}{/block}
+
+{block name="menu"}{/block}
 {block name="content"}
 <article class="page-container" style="padding:0;">
-    <form class="form form-horizontal" id="form-article-add" action="{:url('index/article/articleaddexecu')}" enctype="multipart/form-data" method="post">
+    <form class="form form-horizontal" id="form-article-add" action="{:url('home/article/articleaddexecu')}" enctype="multipart/form-data" method="post">
         <!-- 标题 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
@@ -39,7 +41,7 @@
             </div>
         </div>
 
-        <!-- 文章摘要 -->
+        <!-- 文章引言 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -60,11 +62,23 @@
                 </div>
             </div>
         </div>
+        
+        <!-- 是否允许评论 -->
+        <!-- <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">允许评论：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="check-box">
+                    <input type="checkbox" id="checkbox-pinglun">
+                    <label for="checkbox-pinglun">&nbsp;</label>
+                </div>
+            </div>
+        </div> -->
 
         <!-- 内容输入框 -->
         <div class="row cl">
-            <div class="formControls col-xs-12 col-sm-11"> 
-                <script type="text/plain" id="editor" name="content" style="width:100%;height:400px;">{$Request.cookie.content|default="内容"}</script> 
+            <label class="form-label col-xs-4 col-sm-2">内容：</label>
+            <div class="formControls col-xs-8 col-sm-9"> 
+                <script type="text/plain" id="editor" name="content" style="width:100%;height:400px;">{$Request.cookie.content|default=""}</script> 
             </div>
         </div>
 
@@ -81,17 +95,7 @@
 {/block}
 
 {block name="js"}
-{load href="__STATIC__/lib/layer/2.4/layer.js" /}
-{load href="__STATIC__/static/h-ui/js/H-ui.js" /}
-{load href="__STATIC__/static/h-ui.admin/js/H-ui.admin.page.js" /}
-{load href="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
-{load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js" /}
-{load href="__STATIC__/lib/webuploader/0.1.5/webuploader.min.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.config.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js" /}
-{load href="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js" /}
+<!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
 $(function(){
     // radio,checkbox 美化
@@ -108,6 +112,7 @@ $(function(){
             ['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
         ],
     });
+
 
     //表单验证
     var validate = $("#form-article-add").validate({
@@ -149,11 +154,31 @@ $(function(){
         focusCleanup:true,
         focusInvalid:false,
         submitHandler:function(form) {
-            form.submit();
+            // form.submit();
+            var formData = new FormData(form);
+            $.ajax({
+                type:"POST",
+                url:"{:url('article/articleaddexecu')}",
+                data:formData,
+                processData:false,
+                contentType: false,
+                success: function(res) {
+                    if (res === true) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.msg('文章添加成功!',{icon:1,time:1500});
+                        parent.layer.close(index);
+                    } else {
+                        layer.msg(res.msg ,{icon:5,time:2000});
+                    }
+                    // console.log(res);
+                }
+            });
         }
     });
         
 });
 
 </script>
+<!--/请在上方写此页面业务相关的脚本-->
 {/block}

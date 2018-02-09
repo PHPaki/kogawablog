@@ -1,93 +1,143 @@
 {extend name="public/base" /}
 {block name="banner"}{/block}
 {block name="content"}
-      <article class="am-article blog-article-p">
-        <div class="am-article-hd">
-          <h1 class="am-article-title blog-text-center">{$article.title}</h1>
-          <p class="am-article-meta blog-text-center">
-              <span><a href="{:url('index/index', 'cat_id='.$article.category.id)}" class="blog-color">{$article.category.name} &nbsp;</a></span>-
-              <span><a href="#">{$article.user.nick} &nbsp;</a></span>-
-              <span>{$article.create_time}</span>
-          </p>
-        </div>        
-        <div class="am-article-bd">
-          <img src="{$article.img_path}" alt="{$article.title}" class="blog-entry-img blog-article-margin">  
-          <!--引言： -->
-          <p class="class="am-article-lead"">
-            <blockquote>
-              <p>{$article.subtitle}</p> 
-            </blockquote>
-            {$article.articleContent.content}
-          </p>
+  <article class="am-article blog-article-p">
+    <div class="am-article-hd">
+      <h1 class="am-article-title blog-text-center">{$article.title}</h1>
+      <p class="am-article-meta blog-text-center">
+          <span><a href="{:url('index/index', 'cat_id='.$article.category.id)}" class="blog-color">{$article.category.name} &nbsp;</a></span>-
+          <span><a href="#">{$article.user.nick} &nbsp;</a></span>-
+          <span>{$article.create_time}</span>
+      </p>
+    </div>        
+    <div class="am-article-bd">
+      <img src="{$article.img_path}" alt="{$article.title}" class="blog-entry-img blog-article-margin">  
+      <!--引言： -->
+      <p class="class="am-article-lead"">
+        <blockquote>
+          <p>{$article.subtitle}</p> 
+        </blockquote>
+        {$article.articleContent.content}
+      </p>
+    </div>
+  </article>
+    
+    <div class="am-g blog-article-widget blog-article-margin">
+      <div class="am-u-lg-4 am-u-md-5 am-u-sm-7 am-u-sm-centered blog-text-center">
+        <!-- 标签 -->
+        <span class="am-icon-tags"> &nbsp;</span>
+        {foreach $article.tag as $vo}
+        <a href="{:url('index/index', 'tag_id='.$vo.id)}">{$vo.name}</a>
+        {/foreach}
+        <hr>
+        <!-- 外链 -->
+        <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+        <a href=""><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
+        <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
+      </div>
+    </div>
+
+    <!-- 页码部分 -->
+    <hr>
+    <ul class="am-pagination blog-article-margin">
+      <li class="am-pagination-prev"><a href="#" class="">&laquo; 一切的回顾</a></li>
+      <li class="am-pagination-next"><a href="">不远的未来 &raquo;</a></li>
+    </ul>
+    
+    <!-- 评论列表 -->
+    <hr>
+    <div class="am-g blog-author blog-article-margin" id="hxc-comment-box">
+      <h3 class="blog-comment">历史评论</h3>
+      <!-- 判断是否有评论 -->
+      {notempty name="article.comment"}
+      {foreach $article.comment as $vo}
+      <div class="am-g blog-author blog-article-margin" id="hxc-comment">
+        <div class="am-u-sm-3 am-u-md-3 am-u-lg-2" id="hxc-comment-div-left">
+          <img src="__STATIC__/home/assets/i/f15.jpg" alt="" class="blog-author-img-b am-circle">
         </div>
-      </article>
-        
-        <div class="am-g blog-article-widget blog-article-margin">
-          <div class="am-u-lg-4 am-u-md-5 am-u-sm-7 am-u-sm-centered blog-text-center">
-            <!-- 标签 -->
-            <span class="am-icon-tags"> &nbsp;</span>
-            {foreach $article.tag as $vo}
-            <a href="{:url('index/index', 'tag_id='.$vo.id)}">{$vo.name}</a>
-            {/foreach}
-            <hr>
-            <!-- 外链 -->
-            <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
-            <a href=""><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
-            <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
-          </div>
+        <div class="am-u-sm-9 am-u-md-9 am-u-lg-10" id="hxc-comment-div-right">
+        <h3 id="hxc-comment-h3">
+          <span>用户 &nbsp;: &nbsp;</span>
+          <span class="blog-color"><a href="{:url('index/index', 'author_id='.$vo.user_id)}">{$vo.user.nick}</a></span>
+          <span style="float:right;margin-right:100px;font-size: 12px;">{$vo.create_time}</span>
+        </h3>
+          <p id="hxc-comment-p">{$vo.content}</p>
         </div>
-
-        <!-- 页码部分 -->
-        <hr>
-        <ul class="am-pagination blog-article-margin">
-          <li class="am-pagination-prev"><a href="#" class="">&laquo; 一切的回顾</a></li>
-          <li class="am-pagination-next"><a href="">不远的未来 &raquo;</a></li>
-        </ul>
-        
-        <!-- 评论列表 -->
-        <hr>
-        <div class="am-g blog-author blog-article-margin" id="hxc-comment-box">
-          <h3 class="blog-comment">历史评论</h3>
-          <!-- 判断是否有评论 -->
-          {notempty name="article.comment"}
-          {foreach $article.comment as $vo}
-          <div class="am-g blog-author blog-article-margin" id="hxc-comment">
-            <div class="am-u-sm-3 am-u-md-3 am-u-lg-2" id="hxc-comment-div-left">
-              <img src="__STATIC__/home/assets/i/f15.jpg" alt="" class="blog-author-img-b am-circle">
-            </div>
-            <div class="am-u-sm-9 am-u-md-9 am-u-lg-10" id="hxc-comment-div-right">
-            <h3 id="hxc-comment-h3">
-              <span>用户 &nbsp;: &nbsp;</span>
-              <span class="blog-color"><a href="{:url('index/index', 'author_id='.$vo.user_id)}">{$vo.user.nick}</a></span>
-              <span style="float:right;margin-right:100px;font-size: 12px;">{$vo.create_time}</span>
-            </h3>
-              <p id="hxc-comment-p">{$vo.content}</p>
-            </div>
-          </div>
-          <hr>
-          {/foreach}
-          {else /}
-          <div class="am-g blog-author blog-article-margin" id="hxc-comment">
-            <div class="am-u-sm-9 am-u-md-9 am-u-lg-10" id="hxc-comment-div-right">
-              <p id="hxc-comment-p">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂时没有任何评论</p>
-            </div>
-          </div>
-          {/notempty}
+      </div>
+      <hr>
+      {/foreach}
+      {else /}
+      <div class="am-g blog-author blog-article-margin" id="hxc-comment">
+        <div class="am-u-sm-9 am-u-md-9 am-u-lg-10" id="hxc-comment-div-right">
+          <p id="hxc-comment-p">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂时没有任何评论</p>
         </div>
+      </div>
+      {/notempty}
+    </div>
 
-        <!-- 评论提交 -->
-        <hr>
-        <form class="am-form am-g">
-            <h3 class="blog-comment">发布评论</h3>
-          <fieldset>
+    <!-- 评论提交 -->
+    <hr>
+    <form id="comment" class="am-form am-g" method="post">
+        <h3 class="blog-comment">发布评论</h3>
+      <fieldset>
 
-            <div class="am-form-group">
-              <textarea name="comment" class="" rows="5" placeholder="一字千金"></textarea>
-            </div>
-        
-            <p><button type="submit" class="am-btn am-btn-default">发表评论</button></p>
-          </fieldset>
-        </form>
+        <div class="am-form-group">
+          <textarea name="content" class="" rows="5" placeholder="一字千金"></textarea>
+        </div>
+    
+        <p><input type="submit" class="am-btn am-btn-default" value="发表评论"></p>
+      </fieldset>
+    </form>
 
-        <hr>
-    {/block}
+    <hr>
+{/block}
+{block name="js"}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
+{load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js" /}
+<script type="text/javascript">
+  $(function() {
+    $("#comment").validate({
+      rules:{
+        content:{
+          required:true,
+          rangelength:[2,50],
+        }
+      },
+      onkeyup:false,
+      focusCleanup:true,
+      focusInvalid:false,
+      submitHandler:function(form) {
+        $.ajax({
+          url:"{:url('comment/commentaddexecu')}",
+          data:$(form).serialize() + "&article_id={$article.id}" ,
+          type:"POST",
+          success(res) {
+            if(res !== null) {
+                window.location.reload();
+              } else {
+                alert('评论失败');
+              }
+          }
+        });
+      }
+    });
+  });
+  // $("#comment").submit(function() {
+  //   $.ajax({
+  //     url:"{:url('comment/commentaddexecu')}",
+  //     data:{'content':$("#comment").serialize()},
+  //     type:"POST",
+  //     success(res) {
+  //       // if(res.num == 1) {
+  //       //   window.location.reload();
+  //       // } else {
+  //       //   alert('评论失败');
+  //       // }
+  //       console(res);
+  //     }
+  //   });
+  //   return false;
+  // });
+</script>
+{/block}

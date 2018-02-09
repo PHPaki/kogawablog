@@ -1,7 +1,7 @@
 <?php
 namespace app\home\controller;
 
-use app\home\controller\Base;
+use app\base\controller\Base;
 use app\home\model\Article;
 use app\home\model\Tag;
 use app\home\model\Category;
@@ -47,7 +47,15 @@ class Index extends Base
     protected function catPage()
     {
         $this->cat_id = $this->request->param('cat_id');
-        $list = Article::where('cat_id', $this->cat_id)->paginate(5);
+        $catAll = Category::all();
+        //获得一级栏目下的所有子栏目id
+        $arr = $this->getIdByCat($this->cat_id , $catAll);
+        $condition = 'cat_id='.$this->cat_id;
+        foreach ($arr as $v) {
+            $condition .= " or cat_id=" . $v;
+        }
+        //获取一级栏目下的所有文章(包括子栏目内的文章)
+        $list = Article::where($condition)->paginate(5);
         $this->assign('list', $list);
         //查询页面主标题(防止如果该栏目没有文章时报错)
         $cat_name = Category::get($this->cat_id)->name;
@@ -75,6 +83,19 @@ class Index extends Base
         //查询页面主标题(防止如果该用户没有文章时报错)
         $author_name = User::get($this->author_id)->nick.'的文章';
         $this->assign('topTitle', $author_name);
-
     }
+
+    //递归获取所有子栏目的id(数组)
+    protected function getIdByCat($id, $cat) 
+    {
+        $arr = [];
+        foreach ($cat as $v) {
+            if ($v->parent_id == $id) {
+                $arr[] = $v->id;
+                $arr = array_merge($arr, $this->getIdByCat($v->id, $cat));
+            } 
+        }
+        return $arr;
+    }
+
 }
