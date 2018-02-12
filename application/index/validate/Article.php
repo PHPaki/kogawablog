@@ -22,9 +22,9 @@ class Article extends Validate
         'tags.checkTags'        =>'请按,隔开标签,每个标签长度在2-5之间',
     ];
 
-    protected $scene = [
-        'edit'=>['title'=>'require|length:2,16', 'subtitle', 'content', 'tags'],
-    ];
+    // protected $scene = [
+    //     'edit'=>['title'=>'require|length:2,16', 'subtitle', 'content', 'tags'],
+    // ];
 
     //tags自定验证规则
     protected function checkTags($value)

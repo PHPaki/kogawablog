@@ -105,14 +105,14 @@
         }
       },
       onkeyup:false,
-      focusCleanup:true,
-      focusInvalid:false,
+      focusCleanup:false,
+      focusInvalid:true,
       submitHandler:function(form) {
         $.ajax({
           url:"{:url('comment/commentaddexecu')}",
           data:$(form).serialize() + "&article_id={$article.id}" ,
           type:"POST",
-          success(res) {
+          success: function(res) {
             if(res !== null) {
                 window.location.reload();
               } else {
@@ -123,21 +123,5 @@
       }
     });
   });
-  // $("#comment").submit(function() {
-  //   $.ajax({
-  //     url:"{:url('comment/commentaddexecu')}",
-  //     data:{'content':$("#comment").serialize()},
-  //     type:"POST",
-  //     success(res) {
-  //       // if(res.num == 1) {
-  //       //   window.location.reload();
-  //       // } else {
-  //       //   alert('评论失败');
-  //       // }
-  //       console(res);
-  //     }
-  //   });
-  //   return false;
-  // });
 </script>
 {/block}

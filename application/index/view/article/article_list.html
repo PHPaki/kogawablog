@@ -108,6 +108,7 @@ function select_delete() {
 				url:"{:url('article/articleDelete')}",
 				data:data,
 				success(status) {
+					console.log(status);
 					// 要避免整页全选删除后,跳入变量未定义页面
 					if (status > 0 && status != box.length) {
 						window.location.href = window.location.href; 
@@ -149,11 +150,12 @@ function article_del(obj,id) {
 			url:"{:url('article/articleDelete')}",
 			data:{id:id},
 			success(status) {
+				console.log(status);
 				if (status == 1) {
 					$(obj).parents("tr").remove();
 					layer.msg('已删除!',{icon:1,time:1000});
 				} else {
-					layer.msg('未知原因,删除失败!',{icon:5,time:1000});
+					layer.msg(status,{icon:5,time:1000});
 				}
 			}
 		});

@@ -53,23 +53,10 @@ class Article extends Base
         $data = $this->request->param();
         //用cookie存储编辑器内容
         if ($this->request->has('content', 'param')) Cookie::set('content', $data['content'], 3600);
-        //检查输入合法性,判断场景
-        if ($this->request->has('article_id', 'param')) {
-            //编辑的情况下,排除title自身验证唯一性
-            if (ArticleModel::where('title', $data['title'])->where('id', '<>', $data["article_id"])->count() == 1) return $this->error("文章标题重复");
-            $scene = "Article.edit";
-        } else {
-            $scene = "Article";       
-        } 
-        $check_result = $this->validate($data, $scene);
+        //验证数据
+        $check_result = $this->validate($data, "Article");
         if ($check_result !== true) {
-            if ($this->request->isAjax()) {
-                //在后台ajax请求时,如果验证错误抛出异常
-                throw new Exception($check_result);
-            } else {
-                //在前台添加文章时,如果验证错误则跳转错误页面
-                $this->error($check_result);
-            }
+            throw new Exception($check_result);
         }
         //判断是否图片上传处理
         if ($this->request->has('img', 'file')) {
@@ -92,9 +79,9 @@ class Article extends Base
     //文章新增提交
     public function articleAddExecu()
     {
-        $data = $this->getPostData();
         Db::startTrans();
         try {
+            $data = $this->getPostData();
             //存入article
             $article = new ArticleModel($data);
             if (!$article->allowField(true)->save()) throw new Exception('存入article表错误');
@@ -107,7 +94,11 @@ class Article extends Base
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return $e->getMessage();
+            if ($this->request->isAjax()) {
+                return $e->getMessage();
+            } else {
+                $this->error($e->getMessage());
+            }
         }
         Cookie::delete('content');
         if ($this->request->isAjax()) {
@@ -120,18 +111,18 @@ class Article extends Base
     //文章编辑提交
     public function articleEditExecu() 
     {
+        Db::startTrans();
         try {
             $data = $this->getPostData();
             $field = $this->request->file('img') ? true : ['title', 'subtitle', 'cat_id', 'tags'];
-            Db::startTrans();
-            if (empty($data['article_id'])) throw new Exception('文章id传入错误');
-            $article = ArticleModel::get($data['article_id']);
+            if (empty($data['id'])) throw new Exception('文章id传入错误');
+            $article = ArticleModel::get($data['id']);
             if ($article->articleContent->save(['content'=>$data['content']]) === false) throw new Exception('更新article_content表错误');
             //更新tag的步骤是把关联tag全部删除后,再新增tag
             if (str_replace(' ', '', $article->tags)) $this->tagDelete($article);
             if (str_replace(' ', '', $data['tags'])) $this->tagSave($article, $data['tags']);
             $article = new ArticleModel();
-            if (!$article->allowField($field)->save($data, ['id'=>$data['article_id']])) throw new Exception("更新article表错误");
+            if (!$article->allowField($field)->save($data, ['id'=>$data['id']])) throw new Exception("更新article表错误");
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
@@ -165,9 +156,15 @@ class Article extends Base
                 if (str_replace(' ', '', $article->tags)) {
                     $this->tagDelete($article);
                 }
-                //删除图片文件
                 //删除文章
+                $thumb_path = $this->request->server('DOCUMENT_ROOT') . $article->thumb_path;
+                $img_path = $this->request->server('DOCUMENT_ROOT') . $article->img_path;
                 if (!$article->delete()) throw new Exception("文章删除失败");
+                // 判断是否是上传的图片,删除图片文件(如何预防单文件删除失败?)
+                if (strpos($thumb_path, 'uploads')) {
+                    if (!unlink($thumb_path)) throw new Exception("缩略图文件删除失败");
+                    if (!unlink($img_path)) throw new Exception("图片文件删除失败");
+                }
                 Db::commit();
                 } catch (Exception $e) {
                     Db::rollback();

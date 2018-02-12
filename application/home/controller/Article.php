@@ -40,7 +40,7 @@ class Article extends Base
     {
         if ($this->request->has('article_id', 'param')) {
             $this->article_id = $this->request->param('article_id');
-            if (!$article = ArticleModel::get($this->article_id)) $this->redirect('index/index');;
+            if (!$article = ArticleModel::get($this->article_id)) $this->redirect('index/index');
             $this->assign('article', $article);
         } else {
             $this->redirect('index/index');

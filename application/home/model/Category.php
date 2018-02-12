@@ -2,14 +2,11 @@
 namespace app\home\model;
 
 use think\Model;
-use traits\model\SoftDelete;
 
 class Category extends Model
 {
-    //软删除
-    use SoftDelete;
-    protected $deleteTime = 'delete_time';
-
+    protected $autoWriteTimestamp = true;
+    
     //关联user表
     public function article()
     {
@@ -26,7 +23,7 @@ class Category extends Model
         foreach ($data as $vo) {
             if ($vo->parent_id == $parent_id) {
                 $vo['tab'] = $tab;
-                $vo['tabName'] = str_repeat('--', $vo['tab']).$vo['name'];
+                $vo['tabName'] = str_repeat('---', $vo['tab']).$vo['name'];
                 $list[] = $vo;
                 $list = array_merge($list, self::getDivide($vo->id, $tab));
             }

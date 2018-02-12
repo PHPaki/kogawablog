@@ -63,17 +63,6 @@
             </div>
         </div>
         
-        <!-- 是否允许评论 -->
-        <!-- <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">允许评论：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="check-box">
-                    <input type="checkbox" id="checkbox-pinglun">
-                    <label for="checkbox-pinglun">&nbsp;</label>
-                </div>
-            </div>
-        </div> -->
-
         <!-- 内容输入框 -->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">内容：</label>
@@ -151,10 +140,9 @@ $(function(){
             }
         },
         onkeyup:false,
-        focusCleanup:true,
-        focusInvalid:false,
+        focusCleanup:false,
+        focusInvalid:true,
         submitHandler:function(form) {
-            // form.submit();
             var formData = new FormData(form);
             $.ajax({
                 type:"POST",
@@ -169,9 +157,9 @@ $(function(){
                         parent.layer.msg('文章添加成功!',{icon:1,time:1500});
                         parent.layer.close(index);
                     } else {
-                        layer.msg(res.msg ,{icon:5,time:2000});
+                        layer.msg(res ,{icon:5,time:2000});
                     }
-                    // console.log(res);
+                    console.log(res);
                 }
             });
         }

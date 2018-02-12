@@ -1,0 +1,138 @@
+{extend name="public/base" /}
+
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+{block name="content"}
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span>
+        文章管理
+        <span class="c-gray en">&gt;</span>
+        评论列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+    
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <div class="text-c"> 
+                <form action="{:url('comment/commentList')}" method="POST">
+                <input type="text" class="input-text" style="width:250px;float: right;" placeholder="输入文章名" id="" name="search">
+                <input type="hidden" name="type" value="2">
+                <button type="submit" class="btn btn-success radius" style="float: right; margin-right: 10px;" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 按文章搜索</button>
+                <div style="clear: both;"></div>
+                </form>
+            </div>
+            <div class="cl pd-5 bg-1 bk-gray mt-20">
+                <span class="l"> 
+                    <a href="{:url('comment/commentList', 'type=0')}" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6ae;</i> 按评论发布时间显示</a> 
+                    <a href="{:url('comment/commentList', 'type=1')}" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6ae;</i> 按文章分类显示</a> 
+                    <a href="javascript:;" onclick="allDel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                    
+                </span>
+                <span class="r">共有数据：<strong>{$count|default='0'}</strong> 条</span>
+            </div>
+
+            <table class="table table-border table-bordered table-bg">
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="6">评论列表</th>
+                    </tr>
+                    <tr class="text-c">
+                        <th width="10"><input id="" type="checkbox" name="" value=""></th>
+                        <th width="50">评论用户</th>
+                        <th width="250">评论内容</th>
+                        <th width="80">评论时间</th>
+                        <th width="80">文章</th>
+                        <th width="80">文章发布时间</th>
+                        <th width="60">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {notempty name="comment_list"}
+                    {foreach $comment_list as $vo}
+                    <tr class="text-c">
+                        <td><input type="checkbox" id="{$vo.id}" value="" name=""></td>
+                        <td>{$vo.user.nick}</td>
+                        <td>{$vo.content}</td>
+                        <td>{$vo.create_time}</td>
+                        <td><a href="{:url('comment/commentList', 'type=3&article_id='.$vo.article.id)}">{$vo.article.title}</a></td>
+                        <td>{$vo.article.create_time}</td>
+                        <td class="td-manage">
+                            <a title="删除" href="javascript:;" onclick="commentDel(this, {$vo.id})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        </td>   
+                    </tr>
+                    {/foreach}
+                    {else /}
+                    <tr class="text-c">
+                        <td colspan="7">暂时没有任何评论内容</td>  
+                    </tr>
+                    {/notempty}
+                </tbody>
+            </table>
+        </article>
+    </div>
+    
+</section>
+{/block}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript">
+//批量删除
+function allDel() {
+    layer.confirm('确认要删除吗？',function(index) {
+        var list = {};
+        var box = $('tbody td input:checkbox')
+        box.each(function(i) {
+            if ($(this).prop('checked') == true) {
+                list['key' + i] = $(this).attr('id');            
+            }
+        });
+        // console.log(list);
+        $.ajax({
+            type:"GET",
+            data:list,
+            url:"{:url('comment/commentDelete')}",
+            success: function(status) {
+                if (status > 0 && status != box.length) {
+                    window.location.href = window.location.href; 
+                    layer.msg('已删除!',{icon:1,time:1500});
+                } else if (status === box.length) {
+                    window.location.href = "{:url('comment/commentList')}";
+                    layer.msg('已删除!',{icon:1,time:1500});
+                } else {
+                    layer.msg(status ,{icon:1,time:1500});
+                }
+                // console.log(status);
+            }
+        });
+    });
+}
+
+function commentDel(obj, id) {
+    layer.confirm('确认要删除吗?', function(index) {
+        $.ajax({
+            type:"GET",
+            data:{id:id},
+            url:"{:url('comment/commentDelete')}",
+            success: function(status) {
+                if (status == 1) {
+                    $(obj).parents('tr').remove();
+                    layer.msg('已删除!',{icon:1,time:1500});
+                } else {
+                    layer.msg(status ,{icon:1,time:1500});
+                }
+            }
+        });
+    });
+}
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}
