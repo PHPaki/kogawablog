@@ -45,6 +45,12 @@
                     <input id="password" name="repassword" type="password" placeholder="确认密码" class="input-text size-L">
                 </div>
             </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe686;</i></label>
+                <div class="formControls col-xs-8">
+                    <input id="password" name="email" type="text" placeholder="邮箱" class="input-text size-L">
+                </div>
+            </div>
 
             <div class="row cl">
                 <div class="formControls col-xs-8 col-xs-offset-3">
@@ -59,6 +65,7 @@
 
 <script type="text/javascript" src="__STATIC__/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layer/2.4/layer.js"></script> 
 <script>
 //利用ajax验证输入
 $(function() {
@@ -67,10 +74,11 @@ $(function() {
         var data = $('form').serialize();
         $.post(url, data, function(res) {
             if(res.status == 0) {
-                alert("注册成功,点击确定登录到主页");
-                window.location.href="{:url('index/index')}"
+                window.layer.confirm('注册成功,点击确定登录到主页',{icon:1}, function() {
+                    window.location.href="{:url('index/index')}"
+                });
             } else {
-                alert("注册失败,因为" + res.message);
+                layer.msg("注册失败,因为" + res.message,{icon:5,time:1500});
             }
         });
 

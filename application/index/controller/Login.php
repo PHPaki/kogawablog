@@ -25,17 +25,18 @@ class Login extends Base
             $data['name'] = $res['name'];
             $data['password'] = md5($res['password']);
             $guest = new UserModel($data);
-            $num = $guest->save();
+            $num = $guest->allowField(true)->save();
             if ($num == 1) {
                 $result = "注册成功,点击确定登录到主页";
                 $status = 0;
                 $user = UserModel::get($guest->id);
+                $user->role_num = $user->getData('role');
                 Session::set('user_id', $user->id);
                 //把登录信息存入session
-                Session::set('user_info', $user);
+                Session::set('user_info', $user->toArray());
                 //把这次的内容时间更新到数据库
                 $user->login_time = time();
-                $user->save();
+                $user->allowField(true)->save();
             } else {
                 $result = '数据库新增错误';
                 $status = 1;
@@ -72,6 +73,8 @@ class Login extends Base
         $user = UserModel::get(['name'=>$data['name']]);//返回对象实例
         if ($user === null) {
             $status = 2;
+        } elseif($user->status == 0) {
+            $status = 3;
         } else {
             $status = ($user->password == md5($data['password'])) ? 0 : 1;
         }
@@ -80,16 +83,20 @@ class Login extends Base
                 $result = "恭喜验证成功";
                 $user->login_count += 1;
                 $user->save();
+                $user->role_num = $user->getData('role');
                 Session::set('user_id', $user->id);
-                Session::set('user_info', $user);
+                Session::set('user_info', $user->toArray());
                 $user->login_time = time();
-                $user->save();
+                $user->allowField(true)->save();
                 break;
             case 1 :
                 $result = "密码错误";
                 break;
             case 2 :
                 $result = "用户名不存在";
+                break;
+            case 3 :
+                $result = "用户被停用了";
                 break;
             default :
                 $result = "未知错误";

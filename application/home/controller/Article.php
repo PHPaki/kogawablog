@@ -19,6 +19,7 @@ class Article extends Base
         $this->catList();
         $this->tagList();
         $this->commentList();
+        $this->blogInfo();
         $this->articlePage();
         return $this->fetch('article');
     }     
@@ -30,6 +31,7 @@ class Article extends Base
         $this->isLogin();
         $this->catList();
         $this->tagList();
+        $this->blogInfo();
         $this->commentList();
         $this->catShow();
         return $this->fetch('article_add');

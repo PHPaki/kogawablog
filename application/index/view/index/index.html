@@ -9,18 +9,20 @@
 
 {block name="content"}
 <section class="Hui-article-box">
-	<nav class="breadcrumb"><i class="Hui-iconfont"></i> <a href="/" class="maincolor">首页</a> 
+	<nav class="breadcrumb"><i class="Hui-iconfont"></i> 首页 
+		<span class="c-999 en">&gt;</span>
+		<span class="c-666">博客管理</span> 
 		<span class="c-999 en">&gt;</span>
 		<span class="c-666">系统信息</span> 
 		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<p class="f-20 text-success">欢迎使用教学管理系统
+			<p class="f-20 text-success">欢迎进入博客管理系统
 				<span class="f-14">v1.0</span>
 				</p>
+			<p>欢迎您&nbsp;&nbsp;&nbsp;&nbsp;<font color="red">{$Request.session.user_info.nick}</font></p>
 			<p>登录次数：{$Think.session.user_info.login_count} </p>
 			<p>上次登录IP：{$Think.server.remote_addr}  上次登录时间：{$Think.session.user_info.login_time|date="Y-m-d H:i:s", ###}</p>
-
 			<table class="table table-border table-bordered table-bg mt-20">
 				<thead>
 					<tr>
@@ -29,7 +31,7 @@
 		</thead>
 				<tbody>
 					<tr>
-						<th width="30%">服务器计算机名</th>
+						<td width="30%">服务器计算机名</th>
 						<td><span id="lbServerName">{$Think.server.server_name}</span></td>
 			</tr>
 					<tr>
@@ -68,7 +70,7 @@
 	</table>
 </article>
 		<footer class="footer">
-			<p>基础教育管理系统<br> 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持</p>
+			<p>博客管理系统 v1.0</p>
 </footer>
 </div>
 </section>

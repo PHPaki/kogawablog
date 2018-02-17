@@ -34,7 +34,6 @@
 					</tr>
 					<tr class="text-c">
 						<!-- <th width="25"><input id="selectPage" onclick="selectPage()" type="checkbox" name="" value=""></th> -->
-						<!-- <th width="40">ID</th> -->
 						<th width="150">栏目名称</th>
 						<th width="150">文章数量</th>
 						<th width="90">栏目创建时间</th>
@@ -47,8 +46,11 @@
 					{foreach $catList as $vo}
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" id="{$vo.id}" value="" name=""></td> -->
-						<!-- <td>{$vo.id}</td> -->
-						<td style="text-align: left; font-size:17px;">{$vo.tabName}</td>
+						{if condition="$vo.tab eq 0"}
+						<td style="text-align: left;color:green; font-weight: bold;">{$vo.tabName}</td>
+						{else /}
+						<td style="text-align: left;">{$vo.tabName}</td>
+						{/if}
 						<td>{$vo.num}</td>
 						<td>{$vo.create_time}</td>
 						<td>{$vo.tab + 1}</td>
@@ -59,14 +61,18 @@
 								<span class="label label-success radius">开放</span>
 							</td>
 							<td class="td-manage">
+							{if condition="$vo.tab neq 0"}
 							<a onClick="category_stop(this,{$vo.id})" href="javascript:;" title="关闭"><i class="Hui-iconfont">&#xe631;</i></a>
+							{/if}
 							{/case}
 							{case value='0'}
 							<td class="td-status">
 							<span class="label label-default radius">关闭</span>
 							</td>
 							<td class="td-manage">
+							{if condition="$vo.tab neq 0"}
 							<a onClick="category_start(this,{$vo.id})" href="javascript:;" title="开放" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>
+							{/if}
 							{/case}
 							{default /}
 						{/switch}
@@ -89,15 +95,6 @@
 <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
 <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script> 
 <script type="text/javascript">
-
-//页面全选
-// function selectPage() {
-// 	if ($('#selectPage').prop('checked') == true){
-// 		$('input:checkbox').prop('checked', true);
-// 	} else {
-// 		$('input:checkbox').prop('checked', false);
-// 	}
-// }
 
 /*
 	参数解释：
@@ -139,7 +136,7 @@ function category_del(obj,id,num) {
 
 //栏目-停用
 function category_stop(obj,id) {
-	layer.confirm('确认要停用吗？',function(index) {
+	layer.confirm('确认要停用吗？停用后,该栏目的文章不会在前台上显示。',function(index) {
 		//Ajax提交数据
 		var url = "{:url('category/categoryChangeStatus')}";
 		$.get(url, {id:id}, function(res) {
@@ -158,7 +155,7 @@ function category_stop(obj,id) {
 
 //栏目-启用
 function category_start(obj,id) {
-	layer.confirm('确认要启用吗？',function(index) {
+	layer.confirm('确认要启用吗？启用后,该栏目的文章会在前台上显示。',function(index) {
 		//Ajax提交数据
 		var url = "{:url('category/categoryChangeStatus')}";
 		$.get(url, {id:id}, function(res) {

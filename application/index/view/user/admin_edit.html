@@ -16,7 +16,11 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>登录名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
+				{if condition="($res.role eq 4)"}
+				<input type="text" class="input-text" readonly="readonly" value="{$res.name}" placeholder="" id="name" name="name">
+				{else /}
 				<input type="text" class="input-text" value="{$res.name}" placeholder="" id="name" name="name">
+				{/if}
 				<span class="inputtip" status="1"></span>
 			</div>
 		</div>
@@ -60,26 +64,58 @@
 				<span class="inputtip" status="1"></span>
 			</div>
 		</div>
+		<!-- 不可编辑个人身份 -->
+		{if condition="($res.id neq $Request.session.user_id)"}
+		<!-- 只有管理员以上才能够编辑身份 -->
+		{if condition="($Request.session.user_info.role_num eq 4)"}
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">角色：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
-				{if condition="($Request.session.user_info.name == 'admin')"}
-				<select class="select" name="role" size="1">
-				{else /}
-				<select class="select" name="role" size="1" disabled>
-				{/if}
-					{switch name=$res.role}
-						{case value='4'}
-						<option value="4" selected>超级管理员</option>
-						<option value="3">管理员</option>
-						{/case}
-						{default /}
-						<option value="4">超级管理员</option>
-						<option value="3" selected>管理员</option>
-					{/switch}
-				</select>
-				</span> </div>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box" style="width:150px;">
+					<select class="select" name="role" size="1">
+						{switch name=$res.role}
+							{case value='3'}
+							<option value="3" selected>管理员</option>
+							<option value="2">高级用户</option>
+							<option value="1">普通用户</option>
+							{/case}
+							{case value='2'}
+							<option value="3">管理员</option>
+							<option value="2" selected>高级用户</option>
+							<option value="1">普通用户</option>
+							{/case}
+							{case value='1'}
+							<option value="3">管理员</option>
+							<option value="2">高级用户</option>
+							<option value="1" selected>普通用户</option>
+							{/case}
+						{/switch}
+					</select>
+				</span> 
+			</div>
 		</div>
+		{elseif condition="($Request.session.user_info.role_num eq 3)" /}
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">角色：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box" style="width:150px;">
+					<select class="select" name="role" size="1">
+						{switch name=$res.role}
+							{case value='2'}
+							<option value="2" selected>高级用户</option>
+							<option value="1">普通用户</option>
+							{/case}
+							{case value='1'}
+							<option value="2">高级用户</option>
+							<option value="1" selected>普通用户</option>
+							{/case}
+						{/switch}
+					</select>
+				</span> 
+			</div>
+		</div>
+		{/if}
+		{/if}
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input id="submit" class="btn btn-primary radius disabled" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">

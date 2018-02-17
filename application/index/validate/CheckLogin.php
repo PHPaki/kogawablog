@@ -9,12 +9,13 @@ class CheckLogin extends Validate
     protected $rule = [
         'name|用户名'=>'require|length:3,12',
         'password|密码'=>'require|length:6,32',
-        'valCode'=>'require|captcha',
-        'repassword|再次输入密码'=>'confirm:password'
+        'valCode|验证码'=>'require|captcha',
+        'repassword|再次输入密码'=>'require|confirm:password',
+        'email|邮箱'=>'require|email',
     ];
 
     protected $scene = [
-        'login' => ['name', 'password'],
+        'login' => ['name', 'password', 'valCode'],
         'register' =>['name'=>'require|length:3,12|unique:user', 'password', 'repassword'],
     ];
 

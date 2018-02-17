@@ -24,10 +24,10 @@
 			<label class="form-label col-xs-4 col-sm-3">栏目从属：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
 				<select class="select" name="parent_id" size="1">
-					<option value="0">设置为主栏目</option>
 					{foreach $select_list as $vo}
 					<option value="{$vo.id}">{$vo.name}</option>
 					{/foreach}
+					<option value="0">设置为主栏目</option>
 				</select>
 				</span> </div>
 		</div>

@@ -7,6 +7,12 @@ use app\home\model\Article;
 
 class Comment extends Base
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->isLogin();
+    }
+    
     public function commentList()
     {
         $type = $this->request->has('type', 'param') ? $this->request->param('type') : 0;
@@ -35,7 +41,10 @@ class Comment extends Base
                 $comment_list = CommentModel::with('article')->order('id', 'desc')->paginate(10);
                 break;
         }
-        if (!empty($comment_list)) $this->assign('comment_list', $comment_list);
+        if (!empty($comment_list)) {
+            $this->assign('comment_list', $comment_list);
+            $this->assign('count', $comment_list->total());
+        }
         return $this->fetch('comment');
     }
 

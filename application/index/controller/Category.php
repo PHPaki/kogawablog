@@ -6,9 +6,14 @@ use app\home\model\Category as CategoryModel;
 
 class Category extends Base
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->isLogin();
+    }
+
     public function categoryList() 
     {
-        $this->isLogin();
         $this->assign([
             'title'=>'栏目管理',
             'keywords'=>'博客栏目',
@@ -85,7 +90,7 @@ class Category extends Base
             return $result;
         }
         //判断一级栏目数量是否已经5个
-        if ($data['parent_id'] == 0 && count($this->getCatByLevel(1)) == 5) {
+        if ($data['parent_id'] == 0 && count($this->getCatByLevel(1)) == 5 && $data['is_sub'] != 0) {
             return "一级栏目只能有5个,请选择修改其他一级栏目或者删除其他一级栏目";
         }
         $category = CategoryModel::get($data['id']);

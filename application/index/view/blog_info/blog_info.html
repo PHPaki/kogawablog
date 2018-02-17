@@ -1,0 +1,122 @@
+{extend name="public/base" /}
+{block name="seo"}
+<title>{$title|default="页面标题"}</title>
+<meta name="keywords" content="{$keywords|default='页面关键字'}">
+<meta name="description" content="{$desc|default='页面描述'}">
+</head>
+<body>
+{/block}
+
+{block name="content"}
+<section class="Hui-article-box">
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span>
+        博客管理
+        <span class="c-gray en">&gt;</span>
+        博客信息 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> 
+    </nav>
+    <article class="page-container" style="padding:0;">
+        <form class="form form-horizontal" id="form-info" action="" enctype="multipart/form-data" method="post">
+            <!-- 上传图片 -->
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">插图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="uploader-thum-container">
+                        <span class="btn-upload form-group">
+                          <input class="input-text upload-url radius uploader-list" type="text" name="img_name" id="uploadfile-1" value="{$info.protrait_path}" readonly><a href="javascript:void();" class="btn btn-default btn-uploadstar radius ml-10"><i class="iconfont">&#xf0020;</i> 浏览文件</a>
+                          <input type="file" multiple name="img" class="input-file">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- 预览 -->
+    <!--         <div class="row cl">
+                <label for="" class="form-label col-xs-4 col-sm-2">预览:</label>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <img src="#">
+                </div>
+            </div> -->
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">我的名称：</label>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <input type="text" class="input-text" value="{$info.user_name}" placeholder="长度在2-10之间" id="" name="user_name">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">个人介绍：</label>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <textarea name="introduction" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入5个字符" datatype="*10-100" dragonfly="true">{$info.introduction}</textarea>
+                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">博客名：</label>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <input type="text" class="input-text" value="{$info.blog_name}" placeholder="长度在2-30之间" id="" name="blog_name">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">博客引言：</label>
+                <div class="formControls col-xs-8 col-sm-5">
+                    <input type="text" class="input-text" value="{$info.blog_headtext}" placeholder="长度在2-50之间" id="" name="blog_headtext">
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                    <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 确认</button>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="1">
+        </form>
+    </article>
+</section>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+$(function() {
+    var validate = $('#form-info').validate({
+        rules:{
+            user_name:{
+                required:true,
+                rangelength:[2,16],
+            },
+            introduction:{
+                required:true,
+                rangelength:[5,100],
+            },
+            blog_name:{
+                required:true,
+                rangelength:[2,30],
+            },
+            blog_headtext:{
+                required:true,
+                rangelength:[2,50],
+            },
+        },
+        focusInvalid:true,
+        focusCleanup:false,
+        onkeyup:false,
+        submitHandler:function(form) {
+            var formData = new FormData(form);
+            $.ajax({
+                type:"POST",
+                data:formData,
+                processData:false,
+                contentType: false,
+                url:"{:url('blog_info/infoDataEdit')}",
+                success: function(res) {
+                    // console.log(res);
+                    if (res === true) {
+                        layer.msg('修改成功!',{icon:1,time:1500});
+                    } else {
+                        layer.msg(res ,{icon:5,time:2000});
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
+{/block}

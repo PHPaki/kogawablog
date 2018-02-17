@@ -17,9 +17,9 @@
 	<!--[if IE 6]>
 	<script type="text/javascript" src="http://__STATIC__/lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 	<script>DD_belatedPNG.fix('*');</script><![endif]-->
-	<title>教育管理系统</title>
-	<meta name="keywords" content="教育管理系统">
-	<meta name="description" content="教育管理系统">
+	<title>博客登录</title>
+	<meta name="keywords" content="博客">
+	<meta name="description" content="博客登录页面">
 </head>
 <body>
 <input type="hidden" id="TenantId" name="TenantId" value="" />
@@ -46,13 +46,6 @@
 					<a id="kanbuq" href="javascript:void(0);">看不清，换一张</a>
 				</div>
 			</div>
-<!-- 			<div class="row cl">
-				<div class="formControls col-xs-8 col-xs-offset-3">
-					<label for="online">
-						<input type="checkbox" name="online" id="online" value="">
-						使我保持登录状态</label>
-				</div>
-			</div> -->
 			<div class="row cl">
 				<div class="formControls col-xs-8 col-xs-offset-3">
 					<input name="" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;" style="margin-left:25px;">
@@ -66,6 +59,7 @@
 
 <script type="text/javascript" src="__STATIC__/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layer/2.4/layer.js"></script> 
 <script>
 //利用ajax验证输入
 $(function() {
@@ -75,10 +69,11 @@ $(function() {
 		$.post(url, data, function(res) {
 			console.log(res);
 			if(res.status == 0) {
-				alert("验证成功,点击确定进入主页");
-				window.location.href="{:url('index/index')}"
+				window.layer.confirm('登录成功,点击确定登录到主页',{icon:1},function() {
+					window.location.href="{:url('home/index/index')}"
+				});
 			} else {
-				alert("验证失败,因为" + res.message);
+				layer.msg("登录失败,因为" + res.message,{icon:5,time:1500});
 			 	var code = document.getElementById('changeCode');
  				code.src ="/captcha.html?rnd=" + Math.random();
 			}

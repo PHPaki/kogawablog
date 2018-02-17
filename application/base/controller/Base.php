@@ -7,6 +7,7 @@ use app\home\model\Article;
 use app\home\model\Category;
 use app\home\model\Tag;
 use app\home\model\Comment;
+use app\index\model\BlogInfo;
 
 class Base extends Controller
 {
@@ -70,6 +71,14 @@ class Base extends Controller
         return $comment;
     }
 
+    //获取个人信息及博客信息
+    public function blogInfo() 
+    {
+        $info = BlogInfo::get(1);
+        $this->assign('info', $info);
+        return $info;
+    }
+
     //按顺序显示各级栏目(为添加页面的选择框提供所有栏目)
     public function catShow()
     {
@@ -78,16 +87,35 @@ class Base extends Controller
         return $catShow;
     }
 
-    //获取子栏目文章数量(递归获得)
+    //获取子栏目文章数量(递归获得,排除关闭的栏目)
     protected function getNum($id, $cat) 
     {
         $num = 0;
         foreach ($cat as $v) {
-            if ($v->parent_id == $id) {
+            if ($v->parent_id == $id && $v->status == 1) {
                 $num = $num + $v->article()->count() + $this->getNum($v->id, $cat);
                 // echo "---".$v->article()->count()."---".$v->name."<br>";
             } 
         }
         return $num;
+    }
+
+    //获取滚动文章
+    public function getSlideArt()
+    {
+        $article = new Article;
+        $slide = $article->limit(3)->order('id', 'desc')->select();
+        foreach ($slide as $vo) {
+            $time = $vo->getData('create_time');
+            $vo->time = date('Y-m-d', $time);
+        }
+        $this->assign('slide', $slide);
+        return $slide;
+    }
+
+    //判断用户身份
+    public function getRole()
+    {
+        return $this->request->session->user_info->role;
     }
 }

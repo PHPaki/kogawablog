@@ -7,7 +7,7 @@ class Article extends Validate
 {
     protected $rule = [
         'title|标题'      =>'require|length:2,16|unique:article' ,
-        'subtitle|小标题' =>'require|length:5,66',
+        'subtitle|小标题' =>'require|length:5,60',
         'content|文章内容'=>'require|min:5',
         'tags'            =>'checkTags'
     ];
@@ -16,7 +16,7 @@ class Article extends Validate
         'title.length:2,16'     =>'标题长度在2-16之间' ,
         'title.unique:article'  =>'标题重复' ,
         'subtitle.require'      =>'需要填写摘要',
-        'subtitle.length:5,66'  =>'摘要长度在5-66之间',
+        'subtitle.length:5,60'  =>'摘要长度在5-60之间',
         'content.require'       =>'内容不能为空',
         'content.min:5'         =>'内容最少一个字符',
         'tags.checkTags'        =>'请按,隔开标签,每个标签长度在2-5之间',

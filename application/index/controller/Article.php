@@ -10,14 +10,19 @@ use think\Exception;
 
 class Article extends Base
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->isLogin();
+    }
+    
     //文章显示
     public function articleList()
     {
-        $this->isLogin();
         $this->assign([
-            'title'=>'教学管理系统',
-            'keywords'=>'教育',
-            'description'=>'教学的各类资源的信息管理',
+            'title'=>'博客文章管理',
+            'keywords'=>'文章',
+            'description'=>'博客的各类文章管理',
         ]);
 
         //获取分页的数据
@@ -147,7 +152,9 @@ class Article extends Base
                 try {
                 $article = ArticleModel::get($v);
                 //删除关联文章内容
+                $content = $article->articleContent->content;
                 if (!$article->articleContent->delete()) throw new Exception("文章内容删除失败");
+                $this->artPicDelete($content);
                 //删除关联评论(可能不存在)
                 if ($article->comment()->count() != 0) {
                     if (!$article->comment()->delete()) throw new Exception("文章评论删除失败");
@@ -180,6 +187,7 @@ class Article extends Base
     protected function uploadImg()
     {
         $file = $this->request->file('img');
+        //这里的getInfo是魔术方法
         $data['ext'] = strrchr($file->getInfo()['name'], '.');
         if ($file) {
             //文件验证后移动到指定文件夹(文件夹不存在自动创建)
@@ -240,4 +248,17 @@ class Article extends Base
         //删除tag关联该文章的全部数据
         if (!Db::table('tag_relation')->where('article_id', $article->id)->delete()) throw new Exception("文章标签中间表修改失败");
     }  
+
+    //删除文章内容里的图片文件
+    protected function artPicDelete($content)
+    {
+        //u编辑器内的图片会自动上传到后台,并在内容中留下图片的路径
+        $data = explode('<img src="', $content);
+        array_shift($data);
+        if ($data) {
+            foreach ($data as $v) {
+                if (!unlink($this->request->server('DOCUMENT_ROOT') . substr($v, 0, strpos($v, '"')))) throw new Exception("文章内图片删除失败");;
+            }
+        }
+    }
 }

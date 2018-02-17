@@ -2,6 +2,7 @@
 <aside class="Hui-aside">
     
     <div class="menu_dropdown bk_2">
+        {if condition="$Request.session.user_info.role_num gt 1"}
         <dl id="menu-article">
             <dt><i class="Hui-iconfont">&#xe616;</i> 文章管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
@@ -11,6 +12,8 @@
                 </ul>
             </dd>
         </dl>
+        {/if}
+        {if condition="$Request.session.user_info.role_num eq 4"}
         <dl id="menu-category">
             <dt><i class="Hui-iconfont">&#xe613;</i> 栏目管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
@@ -19,6 +22,7 @@
                 </ul>
             </dd>
         </dl>
+        {/if}
         <dl id="menu-admin">
             <dt><i class="Hui-iconfont">&#xe62e;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
@@ -27,15 +31,17 @@
                 </ul>
             </dd>
         </dl>
+        {if condition="$Request.session.user_info.role_num eq 4"}
         <dl id="menu-infomation">
-            <dt><i class="Hui-iconfont">&#xe613;</i> 博客信息修改<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe613;</i> 博客管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="{:url('infomation/commentlist')}" title="个人信息">页面个人信息</a></li>
-                    <li><a href="{:url('infomation/commentlist')}" title="滑动图片">滑动图片设置</a></li>
+                    <li><a href="{:url('blog_info/infodata')}" title="个人信息">页面个人信息</a></li>
+                    <li><a href="{:url('index/index')}" title="个人信息">系统信息</a></li>
                 </ul>
             </dd>
         </dl>
+        {/if}
     </div>
 </aside>
 <div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>

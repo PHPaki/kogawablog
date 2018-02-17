@@ -45,8 +45,14 @@
 			<label class="form-label col-xs-4 col-sm-3">角色：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
 				<select class="select" name="role" size="1">
-					<option value="4">超级管理员</option>
-					<option value="3" selected>管理员</option>
+				{if condition="($Request.session.user_info.role_num eq 4)"}
+				<option value="3">管理员</option>
+				<option value="2">高级用户</option>
+				<option value="1" selected>普通用户</option>
+				{else /}
+				<option value="2">高级用户</option>
+				<option value="1" selected>普通用户</option>
+				{/if}
 				</select>
 				</span> </div>
 		</div>

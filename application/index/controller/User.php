@@ -7,19 +7,28 @@ use think\Session;
 
 class User extends Base
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->isLogin();
+    }
+
     //管理员管理页面
     public function adminList()
     {   
-        $this->isLogin();
         $this->assign([
-            'title'=>'教学管理系统',
-            'keywords'=>'教育',
-            'description'=>'教学的各类资源的信息管理',
+            'title'=>'博客用户管理',
+            'keywords'=>'用户,管理',
+            'description'=>'博客用户管理页面',
         ]);
         
-        //从session中获得当前的身份以判断是否是超级管理员
-        if (Session::get('user_info.role') == '超级管理员'){
-            $list = UserModel::paginate(5);
+        //从session中获得当前的身份,区分权限
+        if (Session::get('user_info.role_num') == 4){
+            $list = UserModel::paginate(10);
+            $count = $list->total();
+        } else if (Session::get('user_info.role_num') == 3) {
+            //只允许管理员查看高级用户和普通用户的信息
+            $list = UserModel::where('role', '<', '3')->whereOr('id', $this->request->session('user_id'))->paginate(5);
             $count = $list->total();
         } else {
             $list[] = UserModel::get(['id'=>Session::get('user_id')]);
@@ -56,7 +65,7 @@ class User extends Base
         $data['name'] = $res['name'];
         $data['password'] = $res['password'];
         $data['email'] = $res['email'];
-        $data['role'] = $res['role'];
+        if(isset($res['role'])) $data['role'] = $res['role'];
         return $data;
     }
 
