@@ -26,7 +26,7 @@ class Article extends Base
         ]);
 
         //获取分页的数据
-        $list = ArticleModel::order('id asc')->paginate(5);
+        $list = ArticleModel::order('id desc')->paginate(8);
         $count = $list->total();
         //赋值模版
         $this->assign('list', $list);
