@@ -90,6 +90,7 @@
 {load href="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js" /}
 {load href="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js" /}
 {load href="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js" /}
+{load href="__STATIC__/lib/layer/2.4/layer.js" /}
 <script type="text/javascript">
   $(function() {
     $("#comment").validate({
@@ -108,10 +109,14 @@
           data:$(form).serialize() + "&article_id={$article.id}" ,
           type:"POST",
           success: function(res) {
-            if(res !== null) {
+            if(res === true) {
                 window.location.reload();
+              } else if(res === 0) {
+                layer.confirm('评论需要登录,确认登录吗',function(index) {
+                  window.location.href="{:url('index/login/login')}";
+                });
               } else {
-                alert('评论失败');
+                alert(res);
               }
           }
         });
