@@ -15,7 +15,7 @@ class CheckLogin extends Validate
     ];
 
     protected $scene = [
-        'login' => ['name', 'password', 'valCode'],
+        'login' => ['name', 'password'],//, 'valCode'
         'register' =>['name'=>'require|length:3,12|unique:user', 'password', 'repassword'],
     ];
 
