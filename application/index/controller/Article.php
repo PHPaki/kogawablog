@@ -64,7 +64,7 @@ class Article extends Base
             throw new Exception($check_result);
         }
         //判断是否图片上传处理
-        if ($this->request->has('img', 'file')) {
+        if ($this->request->file('img')) {
             $file = $this->uploadImg();
             $data['img_path'] = $file['img_path'];
             //生成缩略图
@@ -116,10 +116,16 @@ class Article extends Base
     //文章编辑提交
     public function articleEditExecu() 
     {
+	/*$file = $this->request->file('img');
+	if($file) {
+		return "收到文件";
+	} else {
+		return "文件接收失败";
+	}*/
         Db::startTrans();
         try {
-            $data = $this->getPostData();
             $field = $this->request->file('img') ? true : ['title', 'subtitle', 'cat_id', 'tags'];
+            $data = $this->getPostData();
             if (empty($data['id'])) throw new Exception('文章id传入错误');
             $article = ArticleModel::get($data['id']);
             if ($article->articleContent->save(['content'=>$data['content']]) === false) throw new Exception('更新article_content表错误');
@@ -191,11 +197,11 @@ class Article extends Base
         $data['ext'] = strrchr($file->getInfo()['name'], '.');
         if ($file) {
             //文件验证后移动到指定文件夹(文件夹不存在自动创建)
-            $fileInfo = $file->validate(['size'=>2097152, 'ext'=>'jpg,jpeg,png,gif'])->move(ROOT_PATH . 'public' . DS . 'uploads');
+            $fileInfo = $file->validate(['size'=>7340032, 'ext'=>'jpg,jpeg,png,gif'])->move(ROOT_PATH . 'public' . DS . 'uploads');
             if ($fileInfo) {
                 $data['img_path'] = DS . "uploads" . DS . $fileInfo->getSaveName();
             } else {
-                $this->error($fileInfo->getError());
+                throw new Exception($file->getError());
             }
         }
         return $data;
