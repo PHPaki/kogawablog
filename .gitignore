@@ -1,3 +1,7 @@
+##ignore this file##
+/runtime/
+/public/upload/
+/public/ueditor/php/upload/
 .idea
 composer.lock
 *.log
